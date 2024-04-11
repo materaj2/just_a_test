@@ -1,0 +1,44 @@
+## Monitor.php
+<?php class Monitor
+{
+    public $filename = "/var/log/nginx/access.log";
+    public $content = "New thing coming";
+    public function __destruct()
+    {
+        file_put_contents($this->filename, $this->content);
+    }
+
+    public function __toString()
+    {
+        return "Return the message " .
+            $this->filename .
+            " " .
+            $this->content .
+            "<br>";
+    }
+}
+?>
+## index.php
+<?php
+include "Monitor.php";
+
+class info
+{
+    public $message = "SECPlayground";
+    public $message2 = "Insecure Deserialized";
+    public function __toString()
+    {
+        return "Welcome to " . $this->message . " " . $this->message2 . "<br>";
+    }
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    echo $unserialize_object = unserialize(base64_decode($_POST["u"]));
+
+    //echo '<h1>'.$unserialize_object.'</h1>';
+} else {
+    echo unserialize(
+        'O:4:"info":2:{s:7:"message";s:13:"SECPlayground";s:8:"message2";s:25:"Insecure Deserialized Lab";}'
+    );
+}
+?>
